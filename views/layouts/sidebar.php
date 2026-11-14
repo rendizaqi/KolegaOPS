@@ -11,7 +11,17 @@ $inisialUser = strtoupper(substr($namaUser, 0, 2));
 $curController = strtolower($_GET['controller'] ?? '');
 $curAction     = strtolower($_GET['action'] ?? '');
 ?>
-<aside class="w-64 bg-brand-darkNavy text-white flex flex-col justify-between shrink-0 shadow-xl min-h-screen">
+<!-- Top bar & backdrop (hanya tampil di layar kecil) -->
+<header class="lg:hidden fixed top-0 inset-x-0 z-20 h-14 bg-brand-darkNavy text-white flex items-center px-4 shadow-lg">
+  <button type="button" onclick="openSidebar()" aria-label="Buka menu" aria-controls="appSidebar" aria-expanded="false" id="sidebarToggle"
+          class="p-2 -ml-2 mr-2 rounded-lg text-blue-200 hover:text-white hover:bg-blue-950/60 focus:outline-none cursor-pointer">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+  </button>
+  <h1 class="text-lg font-extrabold tracking-wider">Kolega<span class="text-brand-skyBlue">Ops</span></h1>
+</header>
+<div id="sidebarBackdrop" class="fixed inset-0 z-30 bg-slate-900/50 hidden lg:hidden" onclick="closeSidebar()" aria-hidden="true"></div>
+
+<aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 bg-brand-darkNavy text-white flex flex-col justify-between shrink-0 shadow-xl overflow-y-auto lg:min-h-screen">
   <div>
     <!-- Logo & Brand Header -->
     <div class="p-6 border-b border-blue-900/50 flex items-center space-x-3">
@@ -166,6 +176,18 @@ $curAction     = strtolower($_GET['action'] ?? '');
 </div>
 
 <script>
+  function openSidebar() {
+    document.getElementById('appSidebar').classList.remove('-translate-x-full');
+    document.getElementById('sidebarBackdrop').classList.remove('hidden');
+    document.getElementById('sidebarToggle').setAttribute('aria-expanded', 'true');
+  }
+
+  function closeSidebar() {
+    document.getElementById('appSidebar').classList.add('-translate-x-full');
+    document.getElementById('sidebarBackdrop').classList.add('hidden');
+    document.getElementById('sidebarToggle').setAttribute('aria-expanded', 'false');
+  }
+
   function openLogoutModal() {
     const modal = document.getElementById('logoutModal');
     const card  = document.getElementById('logoutModalCard');
@@ -194,6 +216,7 @@ $curAction     = strtolower($_GET['action'] ?? '');
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
       closeLogoutModal();
+      closeSidebar();
     }
   });
 </script>
